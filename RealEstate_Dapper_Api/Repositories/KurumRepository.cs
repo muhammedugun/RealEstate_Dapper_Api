@@ -1,58 +1,60 @@
 ﻿using Dapper;
 using RealEstate_Dapper_Api.Dtos.CategoryDtos;
+using RealEstate_Dapper_Api.Dtos.TbKurumDtos;
 using RealEstate_Dapper_Api.Models.DapperContext;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RealEstate_Dapper_Api.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    public class KurumRepository : IKurumRepository
     {
-        private readonly IGenericRepository<ResultCategoryDto> _genericRepository;
+        private readonly IGenericRepository<ResultKurumDto> _genericRepository;
         private readonly Context _context;
 
-        public CategoryRepository(IGenericRepository<ResultCategoryDto> genericRepository, Context context)
+        public KurumRepository(IGenericRepository<ResultKurumDto> genericRepository, Context context)
         {
             _genericRepository = genericRepository;
             _context = context;
         }
 
-        public async Task<List<ResultCategoryDto>> GetAllCategoryAsync()
+        public async Task<List<ResultKurumDto>> GetAllKurumAsync()
         {
-            string query = "Select * From Category";
+            string query = "Select * From TbKurum";
+            // using bloğu tamamlandığında, connection nesnesinin Dispose metodu otomatik olarak çağrılır.
+            // Bu, bağlantının doğru bir şekilde kapatılmasını ve ilgili kaynakların serbest bırakılmasını sağlar.
             return (await _genericRepository.GetAllAsync(query)).ToList();
         }
 
-        public async Task CreateCategory(CreateCategoryDto categoryDto)
+        public async Task CreateKurum(CreateKurumDto kurumDto)
         {
-            string query = "insert into Category (CategoryName, CategoryStatus) values (@categoryName,@categoryStatus)";
+            string query = "insert into TbKurum (KurumID, KurumAdi) values (@kurumID,@kurumAdi)";
             var parameters = new DynamicParameters();
-            parameters.Add("@categoryName", categoryDto.CategoryName);
-            parameters.Add("@categoryStatus", true);
+            parameters.Add("@kurumID", kurumDto.KurumID);
+            parameters.Add("@kurumAdi", kurumDto.KurumAdi);
             await _genericRepository.CreateAsync(query, parameters);
         }
 
-        public async Task DeleteCategory(int id)
+        public async Task DeleteKurum(int id)
         {
-            string query = "Delete From Category Where CategoryID=@categoryID";
+            string query = "Delete From TbKurum Where KurumID=@kurumID";
             var parameters = new DynamicParameters();
-            parameters.Add("@categoryID", id);
+            parameters.Add("@kurumID", id);
             await _genericRepository.DeleteAsync(query, parameters);
         }
 
-        public async Task UpdateCategory(UpdateCategoryDto categoryDto)
+       
+
+        public async Task UpdateKurum(UpdateKurumDto kurumDto)
         {
-            string query = "Update Category Set CategoryName=@categoryName,CategoryStatus=@categoryStatus where CategoryID=@categoryID";
+            string query = "Update TbKurum Set KurumAdi=@kurumAdi where KurumID=@kurumID";
             var parameters = new DynamicParameters();
-            parameters.Add("@categoryName", categoryDto.CategoryName);
-            parameters.Add("@categoryStatus", categoryDto.CategoryStatus);
-            parameters.Add("@categoryID", categoryDto.CategoryID);
+            parameters.Add("@kurumAdi", kurumDto.KurumAdi);
+            parameters.Add("@kurumID", kurumDto.KurumID);
             await _genericRepository.UpdateAsync(query, parameters);
+
         }
 
         // Implement the methods from IGenericRepository<ResultCategoryDto>
-        public async Task<IEnumerable<ResultCategoryDto>> GetAllAsync(string query)
+        public async Task<IEnumerable<ResultKurumDto>> GetAllAsync(string query)
         {
             return await _genericRepository.GetAllAsync(query);
         }

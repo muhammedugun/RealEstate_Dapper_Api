@@ -1,12 +1,15 @@
 ﻿using RealEstate_Dapper_Api.Dtos.CategoryDtos;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RealEstate_Dapper_Api.Repositories
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IGenericRepository<ResultCategoryDto>
     {
+        // Kategoriye özgü metodlar burada tanımlanabilir
         Task<List<ResultCategoryDto>> GetAllCategoryAsync();
-        void CreateCategory(CreateCategoryDto categoryDto);
-        void DeleteCategory(int id);
-        void UpdateCategory(UpdateCategoryDto categoryDto);
+        Task CreateCategory(CreateCategoryDto categoryDto);
+        Task UpdateCategory(UpdateCategoryDto categoryDto);
+        Task DeleteCategory(int id);
     }
 }
