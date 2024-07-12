@@ -14,6 +14,7 @@ builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericReposi
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<IKurumRepository, KurumRepository>();
 builder.Services.AddTransient <IPersonelRepository, PersonelRepository>();
+builder.Services.AddTransient<IGlobalRepository, GlobalRepository>();
 
 builder.Services.AddControllers();
 

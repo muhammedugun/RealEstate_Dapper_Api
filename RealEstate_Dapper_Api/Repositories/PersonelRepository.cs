@@ -1,9 +1,7 @@
 ﻿using Dapper;
 using RealEstate_Dapper_Api.Dtos.PersonelDtos;
 using RealEstate_Dapper_Api.Models.DapperContext;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace RealEstate_Dapper_Api.Repositories
 {
