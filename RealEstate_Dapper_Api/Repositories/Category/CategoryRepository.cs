@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RealEstate_Dapper_Api.Repositories
+namespace RealEstate_Dapper_Api.Repositories.Category
 {
     public class CategoryRepository : ICategoryRepository
     {
@@ -70,6 +70,18 @@ namespace RealEstate_Dapper_Api.Repositories
         public async Task DeleteAsync(string query, DynamicParameters parameters)
         {
             await _genericRepository.DeleteAsync(query, parameters);
+        }
+
+        public async Task<GetByIDCategoryDto> GetCategory(int id)
+        {
+            string query = "Select * From Category Where CategoryID=@CategoryID";
+            var parameters = new DynamicParameters();
+            parameters.Add("@CategoryID", id);
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryFirstOrDefaultAsync<GetByIDCategoryDto>(query, parameters);
+                return values;
+            }
         }
     }
 }

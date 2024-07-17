@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace RealEstate_Dapper_Api.Repositories
+namespace RealEstate_Dapper_Api.Repositories.Category
 {
     public interface ICategoryRepository : IGenericRepository<ResultCategoryDto>
     {
@@ -11,5 +11,6 @@ namespace RealEstate_Dapper_Api.Repositories
         Task CreateCategory(CreateCategoryDto categoryDto);
         Task UpdateCategory(UpdateCategoryDto categoryDto);
         Task DeleteCategory(int id);
+        Task<GetByIDCategoryDto> GetCategory(int id);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RealEstate_Dapper_Api.Dtos.CategoryDtos;
-using RealEstate_Dapper_Api.Repositories;
+using RealEstate_Dapper_Api.Repositories.Category;
 using System.Threading.Tasks;
 
 namespace RealEstate_Dapper_Api.Controllers
