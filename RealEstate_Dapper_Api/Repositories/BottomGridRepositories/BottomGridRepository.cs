@@ -1,4 +1,6 @@
-﻿using RealEstate_Dapper_Api.Dtos.BottomGridDtos;
+﻿using Dapper;
+using RealEstate_Dapper_Api.Dtos.BottomGridDtos;
+using RealEstate_Dapper_Api.Dtos.ProductDtos;
 using RealEstate_Dapper_Api.Dtos.ServiceDtos;
 using RealEstate_Dapper_Api.Models.DapperContext;
 
@@ -6,39 +8,71 @@ namespace RealEstate_Dapper_Api.Repositories.BottomGridRepositories
 {
     public class BottomGridRepository : IBottomGridRepository
     {
-        private readonly IGenericRepository<ResultBottomGridDto> _genericRepository;
-        private readonly Context _context;
 
-        public BottomGridRepository(IGenericRepository<ResultBottomGridDto> genericRepository, Context context)
+        private readonly Context _context;
+        public BottomGridRepository(Context context)
         {
-            _genericRepository = genericRepository;
             _context = context;
         }
-
-        public Task CreateBottomGrid(CreateBottomGridDto bottomGridDto)
+        public async void CreateBottomGrid(CreateBottomGridDto createBottomGridDto)
         {
-            throw new NotImplementedException();
+            string query = "insert into BottomGrid (Icon,Title,Description) values (@icon,@title,@description)";
+            var parameters = new DynamicParameters();
+            parameters.Add("@icon", createBottomGridDto.Icon);
+            parameters.Add("@title", createBottomGridDto.Title);
+            parameters.Add("@description", createBottomGridDto.Description);
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
         }
 
-        public Task DeleteBottomGrid(int id)
+        public async void DeleteBottomGrid(int id)
         {
-            throw new NotImplementedException();
+            string query = "Delete From BottomGrid Where BottomGridID=@bottomGridID";
+            var parameters = new DynamicParameters();
+            parameters.Add("@bottomGridID", id);
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
         }
 
         public async Task<List<ResultBottomGridDto>> GetAllBottomGridAsync()
         {
             string query = "Select * From BottomGrid";
-            return (await _genericRepository.GetAllAsync(query)).ToList();
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultBottomGridDto>(query);
+                return values.ToList();
+            }
         }
 
-        public Task<GetBottomGridDto> GetBottomGrid(int id)
+        public async Task<GetBottomGridDto> GetBottomGrid(int id)
         {
-            throw new NotImplementedException();
+            string query = "Select * From BottomGrid Where BottomGridID=@bottomGridID";
+            var parameters = new DynamicParameters();
+            parameters.Add("@bottomGridID", id);
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryFirstOrDefaultAsync<GetBottomGridDto>(query, parameters);
+                return values;
+            }
         }
 
-        public Task UpdateBottomGrid(UpdateBottomGridDto bottomGridDto)
+        public async void UpdateBottomGrid(UpdateBottomGridDto updateBottomGridDto)
         {
-            throw new NotImplementedException();
+            string query = "Update BottomGrid Set Icon=@icon,Title=@title,Description=@description where BottomGridID=@bottomGridID";
+            var parameters = new DynamicParameters();
+            parameters.Add("@icon", updateBottomGridDto.Icon);
+            parameters.Add("@title", updateBottomGridDto.Title);
+            parameters.Add("@description", updateBottomGridDto.Description);
+            parameters.Add("@bottomGridID", updateBottomGridDto.BottomGridID);
+
+            using (var connectiont = _context.CreateConnection())
+            {
+                await connectiont.ExecuteAsync(query, parameters);
+            }
         }
     }
 }

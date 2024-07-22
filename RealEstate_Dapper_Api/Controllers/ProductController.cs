@@ -1,25 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RealEstate_Dapper_Api.Dtos.ProductDtos;
-using RealEstate_Dapper_Api.Repositories.Product;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using RealEstate_Dapper_Api.Repositories.ProductRepository;
 
 namespace RealEstate_Dapper_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductsController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        [HttpGet] //Bu attribute, bu metodun yalnızca HTTP GET istekleriyle çağrılabileceğini belirtir
-        public async Task<IActionResult> ListProduct()
+        [HttpGet]
+        public async Task<IActionResult> ProductList()
         {
             var values = await _productRepository.GetAllProductAsync();
-            return Ok(values); // HTTP 200 OK yanıtı ile alınan kategorileri return eder
+            return Ok(values);
         }
 
         [HttpGet("ProductListWithCategory")]
@@ -28,26 +28,27 @@ namespace RealEstate_Dapper_Api.Controllers
             var values = await _productRepository.GetAllProductWithCategoryAsync();
             return Ok(values);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct(CreateProductDto createProductDto)
+        [HttpGet("ProductDealOfTheDayStatusChangeToTrue/{id}")]
+        public async Task<IActionResult> ProductDealOfTheDayStatusChangeToTrue(int id)
         {
-            await _productRepository.CreateProduct(createProductDto);
-            return Ok("Kategori başarılı bir şekilde eklendi!");
+            _productRepository.ProductDealOfTheDayStatusChangeToTrue(id);
+            return Ok("İlan Günün Fırsatları Arasına Eklendi");
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteProduct(int id)
+        [HttpGet("ProductDealOfTheDayStatusChangeToFalse/{id}")]
+        public async Task<IActionResult> ProductDealOfTheDayStatusChangeToFalse(int id)
         {
-            await _productRepository.DeleteProduct(id);
-            return Ok();
+            _productRepository.ProductDealOfTheDayStatusChangeToFalse(id);
+            return Ok("İlan Günün Fırsatları Arasından Çıkarıldı");
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
+        [HttpGet("Last5ProductList")]
+        public async Task<IActionResult> Last5ProductList()
         {
-            await _productRepository.UpdateProduct(updateProductDto);
-            return Ok("Kategori başarıyla güncellendi");
+            var values = await _productRepository.GetLast5ProductAsync();
+            return Ok(values);
         }
+
+
     }
 }

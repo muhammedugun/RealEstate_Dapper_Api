@@ -6,60 +6,51 @@ namespace RealEstate_Dapper_Api.Repositories.WhoWeAreRepository
 {
     public class WhoWeAreDetailRepository : IWhoWeAreDetailRepository
     {
-        private readonly IGenericRepository<ResultWhoWeAreDetailDto> _genericRepository;
         private readonly Context _context;
-
-        public WhoWeAreDetailRepository(IGenericRepository<ResultWhoWeAreDetailDto> genericRepository, Context context)
+        public WhoWeAreDetailRepository(Context context)
         {
-            _genericRepository = genericRepository;
             _context = context;
         }
-
-        public Task CreateAsync(string query, DynamicParameters parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task CreateWhoWeAreDetail(CreateWhoWeAreDetailDto whoWeAreDetailDto)
+        public async void CreateWhoWeAreDetail(CreateWhoWeAreDetailDto createWhoWeAreDetailDto)
         {
             string query = "insert into WhoWeAreDetail (Title,Subtitle,Description1,Description2) values (@title,@subTitle,@description1,@description2)";
             var parameters = new DynamicParameters();
-            parameters.Add("@title", whoWeAreDetailDto.Title);
-            parameters.Add("@subTitle", whoWeAreDetailDto.Subtitle);
-            parameters.Add("@description1", whoWeAreDetailDto.Description1);
-            parameters.Add("@description2", whoWeAreDetailDto.Description2);
-            await _genericRepository.CreateAsync(query, parameters);
+            parameters.Add("@title", createWhoWeAreDetailDto.Title);
+            parameters.Add("@subTitle", createWhoWeAreDetailDto.Subtitle);
+            parameters.Add("@description1", createWhoWeAreDetailDto.Description1);
+            parameters.Add("@description2", createWhoWeAreDetailDto.Description2);
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
         }
 
-        public Task DeleteAsync(string query, DynamicParameters parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task DeleteWhoWeAreDetail(int id)
+        public async void DeleteWhoWeAreDetail(int id)
         {
             string query = "Delete From WhoWeAreDetail Where WhoWeAreDetailID=@whoWeAreDetailID";
             var parameters = new DynamicParameters();
             parameters.Add("@whoWeAreDetailID", id);
-            await _genericRepository.DeleteAsync(query, parameters);
-        }
-
-        public Task<IEnumerable<ResultWhoWeAreDetailDto>> GetAllAsync(string query)
-        {
-            throw new NotImplementedException();
+            using (var connection = _context.CreateConnection())
+            {
+                await connection.ExecuteAsync(query, parameters);
+            }
         }
 
         public async Task<List<ResultWhoWeAreDetailDto>> GetAllWhoWeAreDetailAsync()
         {
             string query = "Select * From WhoWeAreDetail";
-            return (await _genericRepository.GetAllAsync(query)).ToList();
+            using (var connection = _context.CreateConnection())
+            {
+                var values = await connection.QueryAsync<ResultWhoWeAreDetailDto>(query);
+                return values.ToList();
+            }
         }
 
         public async Task<GetByIDWhoWeAreDetailDto> GetWhoWeAreDetail(int id)
         {
             string query = "Select * From WhoWeAreDetail Where WhoWeAreDetailID=@whoWeAreDetailID";
             var parameters = new DynamicParameters();
-            parameters.Add("@whoWeAreDetail", id);
+            parameters.Add("@whoWeAreDetailID", id);
             using (var connection = _context.CreateConnection())
             {
                 var values = await connection.QueryFirstOrDefaultAsync<GetByIDWhoWeAreDetailDto>(query, parameters);
@@ -67,21 +58,19 @@ namespace RealEstate_Dapper_Api.Repositories.WhoWeAreRepository
             }
         }
 
-        public Task UpdateAsync(string query, DynamicParameters parameters)
+        public async void UpdateWhoWeAreDetail(UpdateWhoWeAreDetailDto updateWhoWeAreDetailDto)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task UpdateWhoWeAreDetail(UpdateWhoWeAreDetailDto WhoWeAreDetailDto)
-        {
-            string query = "Update WhoWeAreDetail Set Title=@title,Subtitle=@subtitle,Description1=@description1,Description2=@description2 where WhoWeAreDetailID=@whoWeAreDetailID";
+            string query = "Update WhoWeAreDetail Set Title=@title,Subtitle=@subTitle,Description1=@description1,Description2=@description2 where WhoWeAreDetailID=@whoWeAreDetailID";
             var parameters = new DynamicParameters();
-            parameters.Add("@title", WhoWeAreDetailDto.Title);
-            parameters.Add("@subtitle", WhoWeAreDetailDto.Subtitle);
-            parameters.Add("@description1", WhoWeAreDetailDto.Description1);
-            parameters.Add("@description2", WhoWeAreDetailDto.Description2);
-            parameters.Add("@whoWeAreDetailID", WhoWeAreDetailDto.WhoWeAreDetailID);
-            await _genericRepository.UpdateAsync(query, parameters);
+            parameters.Add("@title", updateWhoWeAreDetailDto.Title);
+            parameters.Add("@Subtitle", updateWhoWeAreDetailDto.Subtitle);
+            parameters.Add("@description1", updateWhoWeAreDetailDto.Description1);
+            parameters.Add("@description2", updateWhoWeAreDetailDto.Description2);
+            parameters.Add("@whoWeAreDetailID", updateWhoWeAreDetailDto.WhoWeAreDetailId);
+            using (var connectiont = _context.CreateConnection())
+            {
+                await connectiont.ExecuteAsync(query, parameters);
+            }
         }
     }
 }

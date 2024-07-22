@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RealEstate_Dapper_UI.Dtos.BottomGridDtos;
 using RealEstate_Dapper_UI.Dtos.TestimonialDtos;
 
 namespace RealEstate_Dapper_UI.ViewComponents.HomePage
@@ -14,7 +15,7 @@ namespace RealEstate_Dapper_UI.ViewComponents.HomePage
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44308/api/Testimonials");
+            var responseMessage = await client.GetAsync("https://localhost:44333/api/Testimonials");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();

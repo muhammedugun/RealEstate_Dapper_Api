@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using RealEstate_Dapper_UI.Dtos.BottomGridDtos;
 
-
 namespace RealEstate_Dapper_UI.ViewComponents.HomePage
 {
     public class _DefaultBottomGridComponentPartial : ViewComponent
@@ -12,11 +11,10 @@ namespace RealEstate_Dapper_UI.ViewComponents.HomePage
         {
             _httpClientFactory = httpClientFactory;
         }
-
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:44308/api/BottomGrids");
+            var responseMessage = await client.GetAsync("https://localhost:44333/api/BottomGrids");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
